@@ -1,4 +1,4 @@
-MelodyLab v5.86 Displacement Pressure Phase
+MelodyLab v5.87 Displacement Pressure Freq Vertical Fix
 
 - ปรับหน้า Displacement and Pressure ให้ใช้รูปแบบเดียวกับ Longitudinal และ Pressure
 - ใช้ปุ่มเล่น/หยุด/รีเซ็ตแบบเดียวกัน
@@ -498,9 +498,14 @@ MelodyLab v5.86 Displacement Pressure Phase
 - เพิ่มพื้นหลังแบบ pill ให้ข้อความอ่านง่ายขึ้น
 - แก้คำซ้ำในคำอธิบายเพิ่มเติมจาก ส่วนส่วนอัด / ส่วนส่วนขยาย เป็น ส่วนอัด / ส่วนขยาย
 
-## v5.86 Displacement Pressure Phase
+## v5.87 Displacement Pressure Freq Vertical Fix
 - เพิ่มตัวปรับ Phase φ และ Phase Difference Δφ ในหน้า Displacement and Pressure
 - แสดง badge Phase Difference: Δφ = ...°
 - แสดงระยะเฟสเชิงตำแหน่ง เช่น 90° ≈ λ/4
 - ลบข้อความ “กราฟการกระจัดและกราฟความดันอ้างอิงตำแหน่ง x เดียวกัน” ออกจากหัวข้อสิ่งที่สังเกตได้
 - ส่งออก CSV/PNG ยังใช้ชื่อหัวข้อและ timestamp
+
+## v5.87 Displacement Pressure Freq Vertical Fix
+- ปรับกราฟหน้า Displacement and Pressure ให้ขยายตามความสูง canvas และลงมาใกล้ปุ่มเล่น/หยุดมากขึ้น
+- แก้ให้ตัวปรับความถี่ f ส่งผลต่อความยาวคลื่นบนกราฟจริง
+- เมื่อเลื่อนสไลเดอร์ จะ redraw กราฟทันที

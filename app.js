@@ -686,21 +686,31 @@ function drawDisplacementPressureFinal(ctx, c, p, w, h){
   const xMin = Math.max(110, w * 0.11);
   const xMax = w - 72;
   const obsX = w * 0.57;
-  const wavelengthPx = 270;
+
+  // v5.87: frequency and wave speed now affect graph wavelength.
+  // Reference: at 440 Hz and 343 m/s, wavelengthPx is about 270 px.
+  const referenceLambda = 343 / 440;
+  const wavelengthPx = Math.max(125, Math.min(560, (p.lambda / referenceLambda) * 270));
   const k = 2 * Math.PI / wavelengthPx;
   const phase = vizState.t * 0.105 * p.speed - p.phase;
   const phaseDiff = p.phaseDiff ?? Math.PI/2;
   const phaseDiffDeg = Math.round(p.phaseDiffDeg ?? 90);
   const phaseDistancePx = wavelengthPx * (phaseDiffDeg / 360);
 
+  // v5.87: use canvas height to fill vertical space.
   const titleY = 34;
-  const arrowY = 78;
-  const topCard = {x:xMin-24, y:118, w:xMax-xMin+48, h:108};
-  const bottomCard = {x:xMin-24, y:272, w:xMax-xMin+48, h:108};
+  const arrowY = 72;
+  const topStartY = 98;
+  const bottomMargin = 44;
+  const gap = 64;
+  const availableGraphH = Math.max(176, h - topStartY - bottomMargin - gap);
+  const graphH = Math.max(88, Math.min(168, availableGraphH / 2));
+  const topCard = {x:xMin-24, y:topStartY, w:xMax-xMin+48, h:graphH};
+  const bottomCard = {x:xMin-24, y:topCard.y + topCard.h + gap, w:xMax-xMin+48, h:graphH};
   const topMid = topCard.y + topCard.h/2;
   const bottomMid = bottomCard.y + bottomCard.h/2;
-  const ampPx = Math.min(36, topCard.h * 0.30) * p.A;
-  const pressureAmpPx = Math.min(36, bottomCard.h * 0.30) * p.A;
+  const ampPx = Math.max(28, topCard.h * 0.34) * p.A;
+  const pressureAmpPx = Math.max(28, bottomCard.h * 0.34) * p.A;
 
   ctx.fillStyle="#cfe9ff";
   ctx.font="20px Sarabun, system-ui, sans-serif";
@@ -822,7 +832,7 @@ function drawDisplacementPressureFinal(ctx, c, p, w, h){
   const phaseX1 = obsX;
   const phaseX2 = Math.min(xMax-10, obsX + phaseDistancePx);
   const phaseY = topCard.y + topCard.h + 31;
-  if(phaseX2 - phaseX1 > 24){
+  if(phaseX2 - phaseX1 > 24 && phaseY < bottomCard.y - 8){
     ctx.save();
     ctx.strokeStyle="rgba(196,181,253,.94)";
     ctx.fillStyle="rgba(220,210,255,.96)";
@@ -1478,7 +1488,10 @@ function initVisualizer(){
       vizState.mode=btn.dataset.viz;
     };
   });
-  ["vizFreq","vizAmp","vizSpeed","vizTimeSpeed","vizPhase","vizPhaseDiff","vizSubMode"].forEach(id=>$(id)?.addEventListener("input",getVizParams));
+  ["vizFreq","vizAmp","vizSpeed","vizTimeSpeed","vizPhase","vizPhaseDiff","vizSubMode"].forEach(id=>$(id)?.addEventListener("input",()=>{
+    getVizParams();
+    if(typeof drawVisualizer === "function") drawVisualizer();
+  }));
   $("vizPlayBtn").onclick=()=>{vizState.running=true;updateVizPlayerButtons("play");};
   $("vizPauseBtn").onclick=()=>{vizState.running=false;updateVizPlayerButtons("pause");};
   $("vizResetBtn").onclick=()=>{vizState.t=0;updateVizPlayerButtons("reset");};
