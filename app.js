@@ -1397,112 +1397,109 @@ function drawSpeedOfSoundTeachingFinal(ctx, c, pUnused, w, h){
   for(let x=0;x<w;x+=78){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke(); }
   for(let y=0;y<h;y+=52){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
 
-  const topY=42;
-  const panelX=34;
-  const panelY=82;
-  const panelW=w-68;
-  const panelH=h-164;
-  const sourceX=118;
-  const micX=w-126;
-  const midY=panelY+panelH*0.42;
-  const lineStart=sourceX+42;
-  const lineEnd=micX-42;
-  const pathW=lineEnd-lineStart;
+  const titleY = 34;
+  const panelY = 92;
+  const panelX = Math.max(34, w*0.045);
+  const panelW = w - panelX*2;
+  const panelH = Math.max(245, h - panelY - 68);
+  const midY = panelY + panelH*0.42;
+  const sourceX = panelX + 92;
+  const micX = panelX + panelW - 92;
+  const lineStart = sourceX + 42;
+  const lineEnd = micX - 42;
+  const pathW = lineEnd - lineStart;
 
-  ctx.fillStyle="#e8f5ff";
-  ctx.font="bold 22px Sarabun, system-ui, sans-serif";
+  ctx.fillStyle="#d8efff";
+  ctx.font="20px Sarabun, system-ui, sans-serif";
   ctx.textAlign="left";
-  ctx.fillText("Speed of Sound (อัตราเร็วเสียง)", 24, topY);
+  ctx.fillText("Speed of Sound (อัตราเร็วเสียง)", 24, titleY);
 
   ctx.save();
   ctx.fillStyle="rgba(4,18,42,.72)";
   ctx.strokeStyle="rgba(88,166,255,.32)";
-  ctx.lineWidth=1.7;
+  ctx.lineWidth=1.5;
   roundRect(ctx,panelX,panelY,panelW,panelH,18);
   ctx.fill(); ctx.stroke();
   ctx.restore();
 
-  // Direction arrow
+  // direction arrow, same feeling as the three existing visualizer pages
   ctx.save();
   ctx.strokeStyle="rgba(34,211,238,.96)";
   ctx.fillStyle="rgba(34,211,238,.96)";
   ctx.lineWidth=4;
   ctx.beginPath();
-  ctx.moveTo(w*0.39, panelY+48);
-  ctx.lineTo(w*0.62, panelY+48);
+  ctx.moveTo(w*0.36, panelY+44);
+  ctx.lineTo(w*0.64, panelY+44);
   ctx.stroke();
   ctx.beginPath();
-  ctx.moveTo(w*0.62, panelY+48);
-  ctx.lineTo(w*0.60, panelY+36);
-  ctx.lineTo(w*0.60, panelY+60);
+  ctx.moveTo(w*0.64, panelY+44);
+  ctx.lineTo(w*0.62, panelY+32);
+  ctx.lineTo(w*0.62, panelY+56);
   ctx.closePath();
   ctx.fill();
   ctx.font="bold 15px Sarabun, system-ui, sans-serif";
   ctx.textAlign="center";
-  ctx.fillText("ทิศทางการเคลื่อนที่ของพัลส์เสียง", w*0.505, panelY+29);
+  ctx.fillText("ทิศทางการเคลื่อนที่ของพัลส์เสียง", w*0.50, panelY+25);
   ctx.restore();
 
-  // Path
   ctx.save();
   ctx.strokeStyle="rgba(125,230,255,.42)";
   ctx.setLineDash([7,9]);
-  ctx.lineWidth=2.3;
+  ctx.lineWidth=2.2;
   ctx.beginPath();
   ctx.moveTo(lineStart,midY);
   ctx.lineTo(lineEnd,midY);
   ctx.stroke();
   ctx.restore();
 
-  drawSpeaker(ctx, sourceX, midY, 1.05);
-  drawMicIcon(ctx, micX, midY, 1.08);
+  drawSpeaker(ctx, sourceX, midY, 1.02);
+  drawMicIcon(ctx, micX, midY, 1.06);
 
   ctx.fillStyle="rgba(245,248,255,.96)";
-  ctx.font="bold 15px Sarabun, system-ui, sans-serif";
+  ctx.font="bold 14px Sarabun, system-ui, sans-serif";
   ctx.textAlign="center";
-  ctx.fillText("แหล่งกำเนิดเสียง", sourceX, midY+68);
-  ctx.fillText("ไมโครโฟน", micX, midY+68);
+  ctx.fillText("แหล่งกำเนิดเสียง", sourceX, midY+64);
+  ctx.fillText("ไมโครโฟน", micX, midY+64);
 
-  // Pulse
   const elapsed = Math.min(vizState.t*0.016*p.timeScale, p.dt);
   const frac = Math.min(1, p.dt>0 ? elapsed/p.dt : 0);
   const pulseX = lineStart + pathW*frac;
   const reached = frac >= 0.999;
 
-  const pulseBand = ctx.createLinearGradient(pulseX-42,0,pulseX+42,0);
+  const pulseBand = ctx.createLinearGradient(pulseX-40,0,pulseX+40,0);
   pulseBand.addColorStop(0,"rgba(0,0,0,0)");
   pulseBand.addColorStop(.45,"rgba(34,211,238,.16)");
-  pulseBand.addColorStop(.5,"rgba(34,211,238,.70)");
+  pulseBand.addColorStop(.5,"rgba(34,211,238,.68)");
   pulseBand.addColorStop(.55,"rgba(255,77,109,.28)");
   pulseBand.addColorStop(1,"rgba(0,0,0,0)");
   ctx.fillStyle=pulseBand;
-  ctx.fillRect(pulseX-42, panelY+70, 84, panelH-190);
+  ctx.fillRect(pulseX-40, panelY+64, 80, panelH-154);
 
-  for(let i=0;i<7;i++){
-    const rx = Math.max(lineStart, pulseX - i*28 - (vizState.t%20)*0.75);
+  for(let i=0;i<6;i++){
+    const rx = Math.max(lineStart, pulseX - i*28 - (vizState.t%20)*0.7);
     if(rx < lineStart+6) continue;
-    ctx.strokeStyle=`rgba(34,211,238,${0.44-i*0.045})`;
+    ctx.strokeStyle=`rgba(34,211,238,${0.42-i*0.045})`;
     ctx.lineWidth=2;
     ctx.beginPath();
-    ctx.arc(rx,midY,34+i*5,-0.55,0.55);
+    ctx.arc(rx,midY,32+i*5,-0.55,0.55);
     ctx.stroke();
   }
 
   ctx.fillStyle="rgba(255,77,109,.98)";
   ctx.beginPath();
-  ctx.arc(pulseX, midY, 8.5, 0, Math.PI*2);
+  ctx.arc(pulseX, midY, 8.2, 0, Math.PI*2);
   ctx.fill();
   ctx.strokeStyle="rgba(255,255,255,.95)";
   ctx.lineWidth=2;
   ctx.beginPath();
-  ctx.arc(pulseX, midY, 12, 0, Math.PI*2);
+  ctx.arc(pulseX, midY, 11.5, 0, Math.PI*2);
   ctx.stroke();
 
-  // Distance arrow
-  const arrowY=panelY+panelH-90;
+  const arrowY = panelY + panelH - 72;
   ctx.save();
   ctx.strokeStyle="rgba(255,210,55,.98)";
   ctx.fillStyle="rgba(255,210,55,.98)";
-  ctx.lineWidth=2.5;
+  ctx.lineWidth=2.4;
   ctx.beginPath();
   ctx.moveTo(lineStart,arrowY);
   ctx.lineTo(lineEnd,arrowY);
@@ -1518,19 +1515,19 @@ function drawSpeedOfSoundTeachingFinal(ctx, c, pUnused, w, h){
   ctx.lineTo(lineEnd-11,arrowY+7);
   ctx.stroke();
   ctx.setLineDash([5,6]);
-  ctx.beginPath(); ctx.moveTo(lineStart,panelY+82); ctx.lineTo(lineStart,arrowY+18); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(lineEnd,panelY+82); ctx.lineTo(lineEnd,arrowY+18); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(lineStart,panelY+74); ctx.lineTo(lineStart,arrowY+18); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(lineEnd,panelY+74); ctx.lineTo(lineEnd,arrowY+18); ctx.stroke();
   ctx.setLineDash([]);
-  ctx.font="bold 19px Sarabun, system-ui, sans-serif";
+  ctx.font="bold 18px Sarabun, system-ui, sans-serif";
   ctx.textAlign="center";
-  ctx.fillText(`ระยะทาง d = ${p.d.toFixed(1)} m`, (lineStart+lineEnd)/2, arrowY+34);
+  ctx.fillText(`ระยะทาง d = ${p.d.toFixed(1)} m`, (lineStart+lineEnd)/2, arrowY+30);
   ctx.restore();
 
-  const badgesY = panelY + panelH - 52;
-  const badgeW = Math.min(190, (panelW-72)/3);
-  drawTeachingBadge(ctx, panelX+34, badgesY, badgeW, 62, "เวลาที่วัดได้", `${(elapsed*1000).toFixed(1)} ms`, "rgba(34,211,238,.58)");
-  drawTeachingBadge(ctx, panelX+50+badgeW, badgesY, badgeW, 62, "อัตราเร็วเสียง", `${p.v.toFixed(1)} m/s`, "rgba(52,211,153,.58)");
-  drawTeachingBadge(ctx, panelX+66+badgeW*2, badgesY, badgeW, 62, "ความสัมพันธ์", "v = d / Δt", "rgba(168,85,247,.58)");
+  const badgeY = panelY + panelH - 132;
+  const bW = Math.min(180, (panelW-58)/3);
+  drawTeachingBadge(ctx, panelX+24, badgeY, bW, 58, "เวลาที่วัดได้", `${(elapsed*1000).toFixed(1)} ms`, "rgba(34,211,238,.58)");
+  drawTeachingBadge(ctx, panelX+34+bW, badgeY, bW, 58, "อัตราเร็วเสียง", `${p.v.toFixed(1)} m/s`, "rgba(52,211,153,.58)");
+  drawTeachingBadge(ctx, panelX+44+bW*2, badgeY, bW, 58, "ความสัมพันธ์", "v = d / Δt", "rgba(168,85,247,.58)");
 
   if(reached){
     const glow=ctx.createRadialGradient(micX,midY,6,micX,midY,48);
@@ -1543,7 +1540,7 @@ function drawSpeedOfSoundTeachingFinal(ctx, c, pUnused, w, h){
     ctx.fillStyle="rgba(255,230,160,.96)";
     ctx.font="bold 14px Sarabun, system-ui, sans-serif";
     ctx.textAlign="center";
-    ctx.fillText("เสียงเดินทางถึงไมโครโฟน", micX, midY-46);
+    ctx.fillText("เสียงเดินทางถึงไมโครโฟน", micX, midY-44);
   }
 }
 
@@ -2032,9 +2029,10 @@ function resizeVisualizerCanvas(){
   const isLandscape = window.matchMedia("(orientation: landscape)").matches;
   const isLongitudinal = !!document.querySelector(".visualizerSinglePage[data-viz-mode='longitudinal']");
   const isDisplacementPressure = !!document.querySelector(".visualizerSinglePage[data-viz-mode='displacementPressure']");
+  const isSpeedSound = !!document.querySelector(".visualizerSinglePage[data-viz-mode='speedSound']");
 
   let cssH;
-  if(isLongitudinal || isDisplacementPressure){
+  if(isLongitudinal || isDisplacementPressure || isSpeedSound){
     // v5.88: allow more vertical room on phones so the graph can visibly fill the slot.
     const vh = Math.max(640, window.innerHeight || 800);
     cssH = isLandscape ? Math.round(Math.min(vh * 0.66, cssW * 0.58)) : Math.round(vh * 0.52);

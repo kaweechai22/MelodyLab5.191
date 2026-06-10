@@ -2433,14 +2433,14 @@ main.wrap{
 .phaseRow .paramIcon{background:linear-gradient(135deg,rgba(168,85,247,.35),rgba(59,130,246,.26));}
 .phaseDiffRow .paramIcon{background:linear-gradient(135deg,rgba(251,191,36,.35),rgba(168,85,247,.28));font-size:.86rem;}
 
-.speedSoundPage .vizMediaFrame canvas{
-  min-height:320px !important;
-  aspect-ratio:1200/560 !important;
-  background:transparent;
-}
 .speedSoundPage .distanceRow .paramIcon{background:linear-gradient(135deg,rgba(251,191,36,.38),rgba(59,130,246,.22));}
 .speedSoundPage .tempRow .paramIcon{background:linear-gradient(135deg,rgba(251,146,60,.38),rgba(168,85,247,.22));}
 .speedSoundPage .travelTimeRow .paramIcon{background:linear-gradient(135deg,rgba(34,211,238,.34),rgba(168,85,247,.24));font-size:.78rem;}
 @media (max-width: 720px){
   .speedSoundPage .vizMediaFrame canvas{min-height:300px !important;aspect-ratio:1200/610 !important;}
 }
+
+.speedSoundFocusPage .vizMediaFrame canvas{background:transparent;}
+.speedSoundFocusPage .distanceRow .paramIcon{background:linear-gradient(135deg,rgba(251,191,36,.38),rgba(59,130,246,.22));}
+.speedSoundFocusPage .tempRow .paramIcon{background:linear-gradient(135deg,rgba(251,146,60,.38),rgba(168,85,247,.22));}
+.speedSoundFocusPage .travelTimeRow .paramIcon{background:linear-gradient(135deg,rgba(34,211,238,.34),rgba(168,85,247,.24));font-size:.78rem;}
