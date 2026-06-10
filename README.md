@@ -1,7 +1,12 @@
-# MelodyLab v5.88 Displacement Pressure Full Vertical
+# MelodyLab v5.89 Phase Badge No Overlap
 
 ปรับหน้า Displacement and Pressure ให้กราฟกินพื้นที่แนวตั้งเต็มขึ้นบนจอมือถือ
 - เพิ่มความสูง canvas สำหรับหน้า Displacement and Pressure / Longitudinal
 - ขยายความสูงของกราฟบน-ล่างให้ใช้พื้นที่เกือบเต็ม slot
 - ลดช่องว่างใต้กราฟล่าง
 - คงพฤติกรรมความถี่, แอมพลิจูด, อัตราเร็วคลื่น, เฟส และความต่างเฟส
+
+## v5.89 Phase Badge No Overlap
+- เลื่อน badge “Phase Difference: Δφ = ...°” ลงมาอยู่ในกรอบกราฟการกระจัด
+- แก้ไม่ให้ข้อความ Phase Difference ซ้อนทับกับลูกศรทิศทางการเคลื่อนที่ของคลื่น
+- คงการขยายกราฟแนวตั้งและการปรับความถี่ f จาก v5.88

@@ -821,12 +821,16 @@ function drawDisplacementPressureFinal(ctx, c, p, w, h){
   ctx.save();
   ctx.font="bold 14px Sarabun, system-ui, sans-serif";
   ctx.textAlign="right";
-  ctx.fillStyle="rgba(15,34,66,.86)";
-  ctx.strokeStyle="rgba(147,197,253,.34)";
-  roundRect(ctx, xMax-270, topCard.y-38, 270, 28, 12);
+  const phaseBadgeW = 270;
+  const phaseBadgeH = 28;
+  const phaseBadgeX = xMax - phaseBadgeW;
+  const phaseBadgeY = topCard.y + 10; // v5.89: move below the blue direction arrow, inside graph panel
+  ctx.fillStyle="rgba(15,34,66,.88)";
+  ctx.strokeStyle="rgba(147,197,253,.40)";
+  roundRect(ctx, phaseBadgeX, phaseBadgeY, phaseBadgeW, phaseBadgeH, 12);
   ctx.fill(); ctx.stroke();
   ctx.fillStyle="rgba(235,246,255,.96)";
-  ctx.fillText(`Phase Difference: Δφ = ${phaseDiffDeg}°`, xMax-14, topCard.y-19);
+  ctx.fillText(`Phase Difference: Δφ = ${phaseDiffDeg}°`, phaseBadgeX + phaseBadgeW - 14, phaseBadgeY + 19);
   ctx.restore();
 
   const phaseX1 = obsX;
