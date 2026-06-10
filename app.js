@@ -1311,6 +1311,242 @@ function drawVizLegend(ctx,c){
   // legend hidden on longitudinal focus page to keep the graph clean
 }
 
+
+
+function getSpeedSoundParams(){
+  const d = Number($("vizDistance")?.value || 5);
+  const T = Number($("vizTemp")?.value || 20);
+  const timeScale = Number($("vizTimeSpeed")?.value || 1);
+  const v = 331 + 0.6 * T;
+  const dt = d / v;
+  if($("vizDistanceLabel")) $("vizDistanceLabel").textContent = d.toFixed(1) + " m";
+  if($("vizTempLabel")) $("vizTempLabel").textContent = T.toFixed(0) + " °C";
+  if($("vizSoundSpeedLabel")) $("vizSoundSpeedLabel").textContent = v.toFixed(1) + " m/s";
+  if($("vizTravelTimeLabel")) $("vizTravelTimeLabel").textContent = (dt * 1000).toFixed(1) + " ms";
+  if($("vizTimeLabel")) $("vizTimeLabel").textContent = timeScale.toFixed(2).replace(/\.00$/,".0") + "×";
+  return {d,T,v,dt,timeScale};
+}
+
+function drawMicIcon(ctx, x, y, s=1){
+  ctx.save();
+  ctx.translate(x,y);
+  ctx.scale(s,s);
+  ctx.fillStyle="rgba(10,16,30,.92)";
+  ctx.strokeStyle="rgba(230,242,255,.78)";
+  ctx.lineWidth=2;
+  roundRect(ctx,-13,-22,26,32,12);
+  ctx.fill();
+  ctx.stroke();
+  ctx.strokeStyle="rgba(125,230,255,.72)";
+  ctx.lineWidth=1.2;
+  for(let yy=-15; yy<=3; yy+=5){
+    ctx.beginPath();
+    ctx.moveTo(-7,yy);
+    ctx.lineTo(7,yy);
+    ctx.stroke();
+  }
+  ctx.strokeStyle="rgba(230,242,255,.82)";
+  ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.moveTo(0,10);
+  ctx.lineTo(0,28);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(-14,28);
+  ctx.lineTo(14,28);
+  ctx.stroke();
+  const glow=ctx.createRadialGradient(0,0,2,0,0,38);
+  glow.addColorStop(0,"rgba(125,230,255,.28)");
+  glow.addColorStop(1,"rgba(125,230,255,0)");
+  ctx.fillStyle=glow;
+  ctx.beginPath();
+  ctx.arc(0,0,38,0,Math.PI*2);
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawTeachingBadge(ctx, x, y, w, h, title, value, stroke){
+  ctx.save();
+  ctx.fillStyle="rgba(7,18,38,.84)";
+  ctx.strokeStyle=stroke;
+  ctx.lineWidth=1.5;
+  roundRect(ctx,x,y,w,h,14);
+  ctx.fill(); ctx.stroke();
+  ctx.fillStyle="rgba(185,205,232,.92)";
+  ctx.font="13px Sarabun, system-ui, sans-serif";
+  ctx.textAlign="left";
+  ctx.fillText(title,x+16,y+20);
+  ctx.fillStyle="rgba(245,248,255,.98)";
+  ctx.font="bold 22px Sarabun, system-ui, sans-serif";
+  ctx.fillText(value,x+16,y+48);
+  ctx.restore();
+}
+
+function drawSpeedOfSoundTeachingFinal(ctx, c, pUnused, w, h){
+  const p = getSpeedSoundParams();
+  ctx.clearRect(0,0,w,h);
+
+  const bg=ctx.createLinearGradient(0,0,w,h);
+  bg.addColorStop(0,"#020817");
+  bg.addColorStop(1,"#06152e");
+  ctx.fillStyle=bg;
+  ctx.fillRect(0,0,w,h);
+
+  ctx.strokeStyle="rgba(148,163,184,.10)";
+  ctx.lineWidth=1;
+  for(let x=0;x<w;x+=78){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke(); }
+  for(let y=0;y<h;y+=52){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
+
+  const topY=42;
+  const panelX=34;
+  const panelY=82;
+  const panelW=w-68;
+  const panelH=h-164;
+  const sourceX=118;
+  const micX=w-126;
+  const midY=panelY+panelH*0.42;
+  const lineStart=sourceX+42;
+  const lineEnd=micX-42;
+  const pathW=lineEnd-lineStart;
+
+  ctx.fillStyle="#e8f5ff";
+  ctx.font="bold 22px Sarabun, system-ui, sans-serif";
+  ctx.textAlign="left";
+  ctx.fillText("Speed of Sound (อัตราเร็วเสียง)", 24, topY);
+
+  ctx.save();
+  ctx.fillStyle="rgba(4,18,42,.72)";
+  ctx.strokeStyle="rgba(88,166,255,.32)";
+  ctx.lineWidth=1.7;
+  roundRect(ctx,panelX,panelY,panelW,panelH,18);
+  ctx.fill(); ctx.stroke();
+  ctx.restore();
+
+  // Direction arrow
+  ctx.save();
+  ctx.strokeStyle="rgba(34,211,238,.96)";
+  ctx.fillStyle="rgba(34,211,238,.96)";
+  ctx.lineWidth=4;
+  ctx.beginPath();
+  ctx.moveTo(w*0.39, panelY+48);
+  ctx.lineTo(w*0.62, panelY+48);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(w*0.62, panelY+48);
+  ctx.lineTo(w*0.60, panelY+36);
+  ctx.lineTo(w*0.60, panelY+60);
+  ctx.closePath();
+  ctx.fill();
+  ctx.font="bold 15px Sarabun, system-ui, sans-serif";
+  ctx.textAlign="center";
+  ctx.fillText("ทิศทางการเคลื่อนที่ของพัลส์เสียง", w*0.505, panelY+29);
+  ctx.restore();
+
+  // Path
+  ctx.save();
+  ctx.strokeStyle="rgba(125,230,255,.42)";
+  ctx.setLineDash([7,9]);
+  ctx.lineWidth=2.3;
+  ctx.beginPath();
+  ctx.moveTo(lineStart,midY);
+  ctx.lineTo(lineEnd,midY);
+  ctx.stroke();
+  ctx.restore();
+
+  drawSpeaker(ctx, sourceX, midY, 1.05);
+  drawMicIcon(ctx, micX, midY, 1.08);
+
+  ctx.fillStyle="rgba(245,248,255,.96)";
+  ctx.font="bold 15px Sarabun, system-ui, sans-serif";
+  ctx.textAlign="center";
+  ctx.fillText("แหล่งกำเนิดเสียง", sourceX, midY+68);
+  ctx.fillText("ไมโครโฟน", micX, midY+68);
+
+  // Pulse
+  const elapsed = Math.min(vizState.t*0.016*p.timeScale, p.dt);
+  const frac = Math.min(1, p.dt>0 ? elapsed/p.dt : 0);
+  const pulseX = lineStart + pathW*frac;
+  const reached = frac >= 0.999;
+
+  const pulseBand = ctx.createLinearGradient(pulseX-42,0,pulseX+42,0);
+  pulseBand.addColorStop(0,"rgba(0,0,0,0)");
+  pulseBand.addColorStop(.45,"rgba(34,211,238,.16)");
+  pulseBand.addColorStop(.5,"rgba(34,211,238,.70)");
+  pulseBand.addColorStop(.55,"rgba(255,77,109,.28)");
+  pulseBand.addColorStop(1,"rgba(0,0,0,0)");
+  ctx.fillStyle=pulseBand;
+  ctx.fillRect(pulseX-42, panelY+70, 84, panelH-190);
+
+  for(let i=0;i<7;i++){
+    const rx = Math.max(lineStart, pulseX - i*28 - (vizState.t%20)*0.75);
+    if(rx < lineStart+6) continue;
+    ctx.strokeStyle=`rgba(34,211,238,${0.44-i*0.045})`;
+    ctx.lineWidth=2;
+    ctx.beginPath();
+    ctx.arc(rx,midY,34+i*5,-0.55,0.55);
+    ctx.stroke();
+  }
+
+  ctx.fillStyle="rgba(255,77,109,.98)";
+  ctx.beginPath();
+  ctx.arc(pulseX, midY, 8.5, 0, Math.PI*2);
+  ctx.fill();
+  ctx.strokeStyle="rgba(255,255,255,.95)";
+  ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.arc(pulseX, midY, 12, 0, Math.PI*2);
+  ctx.stroke();
+
+  // Distance arrow
+  const arrowY=panelY+panelH-90;
+  ctx.save();
+  ctx.strokeStyle="rgba(255,210,55,.98)";
+  ctx.fillStyle="rgba(255,210,55,.98)";
+  ctx.lineWidth=2.5;
+  ctx.beginPath();
+  ctx.moveTo(lineStart,arrowY);
+  ctx.lineTo(lineEnd,arrowY);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(lineStart,arrowY);
+  ctx.lineTo(lineStart+11,arrowY-7);
+  ctx.moveTo(lineStart,arrowY);
+  ctx.lineTo(lineStart+11,arrowY+7);
+  ctx.moveTo(lineEnd,arrowY);
+  ctx.lineTo(lineEnd-11,arrowY-7);
+  ctx.moveTo(lineEnd,arrowY);
+  ctx.lineTo(lineEnd-11,arrowY+7);
+  ctx.stroke();
+  ctx.setLineDash([5,6]);
+  ctx.beginPath(); ctx.moveTo(lineStart,panelY+82); ctx.lineTo(lineStart,arrowY+18); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(lineEnd,panelY+82); ctx.lineTo(lineEnd,arrowY+18); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.font="bold 19px Sarabun, system-ui, sans-serif";
+  ctx.textAlign="center";
+  ctx.fillText(`ระยะทาง d = ${p.d.toFixed(1)} m`, (lineStart+lineEnd)/2, arrowY+34);
+  ctx.restore();
+
+  const badgesY = panelY + panelH - 52;
+  const badgeW = Math.min(190, (panelW-72)/3);
+  drawTeachingBadge(ctx, panelX+34, badgesY, badgeW, 62, "เวลาที่วัดได้", `${(elapsed*1000).toFixed(1)} ms`, "rgba(34,211,238,.58)");
+  drawTeachingBadge(ctx, panelX+50+badgeW, badgesY, badgeW, 62, "อัตราเร็วเสียง", `${p.v.toFixed(1)} m/s`, "rgba(52,211,153,.58)");
+  drawTeachingBadge(ctx, panelX+66+badgeW*2, badgesY, badgeW, 62, "ความสัมพันธ์", "v = d / Δt", "rgba(168,85,247,.58)");
+
+  if(reached){
+    const glow=ctx.createRadialGradient(micX,midY,6,micX,midY,48);
+    glow.addColorStop(0,"rgba(255,210,55,.55)");
+    glow.addColorStop(1,"rgba(255,210,55,0)");
+    ctx.fillStyle=glow;
+    ctx.beginPath();
+    ctx.arc(micX,midY,48,0,Math.PI*2);
+    ctx.fill();
+    ctx.fillStyle="rgba(255,230,160,.96)";
+    ctx.font="bold 14px Sarabun, system-ui, sans-serif";
+    ctx.textAlign="center";
+    ctx.fillText("เสียงเดินทางถึงไมโครโฟน", micX, midY-46);
+  }
+}
+
 function drawVisualizer(){
   const c=$("visualizerCanvas"); if(!c) return;
   const ctx=c.getContext("2d");
@@ -1335,7 +1571,20 @@ function drawVisualizer(){
     return;
   }
 
+  if(mode==="speedSound"){
+    drawSpeedOfSoundTeachingFinal(ctx,c,p,W,H);
+    if(vizState.running){
+      const ps = getSpeedSoundParams();
+      const elapsed = vizState.t * 0.016 * ps.timeScale;
+      const resetAt = Math.max(ps.dt + 0.45, 0.85);
+      vizState.t = elapsed >= resetAt ? 0 : vizState.t + 1;
+    }
+    vizState.raf=requestAnimationFrame(drawVisualizer);
+    return;
+  }
+
   if(mode==="displacementPressure"){
+
     drawDisplacementPressureFinal(ctx,c,p,W,H);
     if(vizState.running) vizState.t += 1;
     vizState.raf=requestAnimationFrame(drawVisualizer);
@@ -1564,7 +1813,7 @@ function initVisualizer(){
       vizState.mode=btn.dataset.viz;
     };
   });
-  ["vizFreq","vizAmp","vizSpeed","vizTimeSpeed","vizPhase","vizPhaseDiff","vizSubMode"].forEach(id=>$(id)?.addEventListener("input",()=>{
+  ["vizFreq","vizAmp","vizSpeed","vizTimeSpeed","vizPhase","vizPhaseDiff","vizSubMode","vizDistance","vizTemp"].forEach(id=>$(id)?.addEventListener("input",()=>{
     getVizParams();
     if(typeof drawVisualizer === "function") drawVisualizer();
   }));
@@ -1635,9 +1884,15 @@ function getLocalPageSnapshot(){
   if($("vizPhase")) row.parameter_phase_deg = Number($("vizPhase").value || 0);
   if($("vizPhaseDiff")) row.parameter_phase_difference_deg = Number($("vizPhaseDiff").value || 0);
   if($("vizSubMode")) row.parameter_mode = $("vizSubMode").value || "";
+  if($("vizDistance")) row.parameter_distance_m = Number($("vizDistance").value || 0);
+  if($("vizTemp")) row.parameter_temperature_c = Number($("vizTemp").value || 0);
   if($("vizFreqLabel")) row.frequency_display = $("vizFreqLabel").textContent || "";
   if($("vizAmpLabel")) row.amplitude_display = $("vizAmpLabel").textContent || "";
   if($("vizSpeedLabel")) row.wave_speed_display = $("vizSpeedLabel").textContent || "";
+  if($("vizDistanceLabel")) row.distance_display = $("vizDistanceLabel").textContent || "";
+  if($("vizTempLabel")) row.temperature_display = $("vizTempLabel").textContent || "";
+  if($("vizSoundSpeedLabel")) row.sound_speed_display = $("vizSoundSpeedLabel").textContent || "";
+  if($("vizTravelTimeLabel")) row.travel_time_display = $("vizTravelTimeLabel").textContent || "";
   if($("vizTimeLabel")) row.time_speed_display = $("vizTimeLabel").textContent || "";
   if($("vizPhaseLabel")) row.phase_display = $("vizPhaseLabel").textContent || "";
   if($("vizPhaseDiffLabel")) row.phase_difference_display = $("vizPhaseDiffLabel").textContent || "";
