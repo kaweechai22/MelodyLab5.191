@@ -1316,7 +1316,7 @@ function drawVizLegend(ctx,c){
 function getSpeedSoundParams(){
   const d = Number($("vizDistance")?.value || 5);
   const T = Number($("vizTemp")?.value || 20);
-  const timeScale = Number($("vizTimeSpeed")?.value || 0.10);
+  const timeScale = Number($("vizTimeSpeed")?.value || 0.05);
   const v = 331 + 0.6 * T;
   const dt = d / v;
   if($("vizDistanceLabel")) $("vizDistanceLabel").textContent = d.toFixed(1) + " m";
@@ -1461,7 +1461,7 @@ function drawSpeedOfSoundTeachingFinal(ctx, c, pUnused, w, h){
   ctx.fillText("แหล่งกำเนิดเสียง", sourceX, midY+64);
   ctx.fillText("ไมโครโฟน", micX, midY+64);
 
-  const displaySlowFactor = 10; // v5.95 slow-motion display only; physics values stay real
+  const displaySlowFactor = 40; // v5.96 extra slow-motion display only; physics values stay real
   const elapsed = Math.min((vizState.t*0.016*p.timeScale)/displaySlowFactor, p.dt);
   const frac = Math.min(1, p.dt>0 ? elapsed/p.dt : 0);
   const pulseX = lineStart + pathW*frac;
@@ -1573,7 +1573,7 @@ function drawVisualizer(){
     drawSpeedOfSoundTeachingFinal(ctx,c,p,W,H);
     if(vizState.running){
       const ps = getSpeedSoundParams();
-      const displaySlowFactor = 10;
+      const displaySlowFactor = 40;
       const elapsed = (vizState.t * 0.016 * ps.timeScale) / displaySlowFactor;
       const resetAt = Math.max(ps.dt + 0.45, 0.85);
       vizState.t = elapsed >= resetAt ? 0 : vizState.t + 1;
