@@ -1,7 +1,7 @@
 {
-  "name": "MelodyLab Sound Diffraction v5.173",
-  "short_name": "Diffraction",
-  "description": "การเลี้ยวเบนของเสียงและโปรไฟล์ความเข้มเสียงที่แนวผู้ฟัง",
+  "name": "MelodyLab v5.175",
+  "short_name": "MelodyLab",
+  "description": "ห้องทดลองเสียงและคลื่นด้วยมือถือ",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#08111f",

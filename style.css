@@ -190,3 +190,12 @@ td{color:#d4e1f5}
 #visualizer[data-viz-mode="soundDiffraction"] .diffractionReadoutBar b#vizAngleLabel{font-size:.9rem}
 
 /* v5.173: receiver profile labels represent relative sound intensity I/I0, not optical brightness. */
+
+/* v5.175: MelodyLab main-home polish and visualizer menu */
+.homeHeroCard{padding:22px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;background:linear-gradient(135deg,rgba(14,165,233,.16),rgba(99,102,241,.10)),linear-gradient(180deg,rgba(17,28,51,.95),rgba(11,18,32,.98));}
+.homeHeroCard h1{margin:0 0 6px;font-size:clamp(1.8rem,3vw,3rem);letter-spacing:.3px;background:linear-gradient(90deg,#67e8f9,#e0f2fe,#a78bfa);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.homeHeroCard p{margin:0;color:#cbd5e1;line-height:1.6;max-width:760px;}
+.heroBadge{white-space:nowrap;border:1px solid rgba(56,189,248,.35);background:rgba(8,47,73,.35);color:#bae6fd;border-radius:999px;padding:9px 13px;font-weight:800;font-size:.86rem;}
+.featuredTopic{border-color:rgba(250,204,21,.38);background:linear-gradient(135deg,rgba(250,204,21,.08),rgba(17,28,51,.84));}
+.vizSubItem{align-items:center}.vizSubIconWrap{width:42px;height:42px;border-radius:15px;display:flex;align-items:center;justify-content:center;background:rgba(56,189,248,.10);border:1px solid rgba(56,189,248,.22);flex:0 0 auto}.vizSubText{min-width:0}.vizSubArrow{align-self:center}
+@media (max-width:650px){.homeHeroCard{align-items:flex-start;flex-direction:column}.heroBadge{white-space:normal}}
