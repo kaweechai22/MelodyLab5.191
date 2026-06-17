@@ -1,0 +1,13 @@
+{
+  "version": "v5.192",
+  "base": "v5.191",
+  "changes": [
+    "Smaller in-canvas lambda badge to avoid covering wavefronts",
+    "Pattern dots brighter, larger, and denser for clearer constructive/destructive lines"
+  ],
+  "pattern_tune": {
+    "grid_step_px": 20,
+    "constructive_threshold": "I>=0.88",
+    "destructive_threshold": "I<=0.12"
+  }
+}
