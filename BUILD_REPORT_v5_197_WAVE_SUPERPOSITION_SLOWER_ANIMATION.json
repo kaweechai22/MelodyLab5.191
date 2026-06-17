@@ -1,0 +1,10 @@
+{
+  "version": "v5.197",
+  "base": "v5.196",
+  "changes": [
+    "Animation speed slider changed to 0.05x-0.5x",
+    "Default speed changed to 0.15x",
+    "Playback now matches slider value directly",
+    "Service worker cache updated"
+  ]
+}
