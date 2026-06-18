@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MelodyLab v5.212 - Beats (บีตส์)</title>
+  <title>MelodyLab v5.216 - Beats (บีตส์)</title>
   <meta name="description" content="MelodyLab ห้องทดลองเสียงและเก็บข้อมูล ด้วยมือถือ">
   <meta name="theme-color" content="#0f172a">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" href="icon-192.png">
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="stylesheet" href="style.css">
-  <meta name="melodylab-build-version" content="v5.212-safe-cleanup-verified">
+  <meta name="melodylab-build-version" content="v5.216-index-beats-link-fixed">
   <style>
     .beatReadoutBar{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:10px}
     .beatReadoutBar>div{border:1px solid rgba(148,163,184,.18);background:rgba(15,23,42,.48);border-radius:14px;padding:9px 11px;min-height:56px}
@@ -29,19 +29,19 @@
     .timeRow .paramIcon{background:linear-gradient(135deg,#8b5cf6,#c084fc)}
     .templateInsightCard li{line-height:1.55}
 
-    #visualizerCanvas{display:block;width:100% !important;height:350px !important;max-height:350px !important;aspect-ratio:auto !important}
-    .audioButtons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
-    .audioBtn{border:1px solid rgba(148,163,184,.26);border-radius:16px;padding:12px 14px;font-weight:900;font-size:.95rem;cursor:pointer;touch-action:manipulation}
-    .audioBtn.playSound{background:linear-gradient(135deg,#16a34a,#22c55e);color:#ecfdf5;border-color:rgba(74,222,128,.55)}
-    .audioBtn.stopSound{background:linear-gradient(135deg,#991b1b,#ef4444);color:#fef2f2;border-color:rgba(248,113,113,.55)}
-    .audioStatus{margin-top:8px;color:#bbf7d0;font-size:.82rem;line-height:1.35}
+    #visualizerCanvas{display:block;width:100% !important;height:min(52vh,380px) !important;min-height:300px !important;max-height:380px !important;aspect-ratio:auto !important}
+    .audioButtons{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:flex-start;margin:10px 0 0 64px}
+    .audioBtn{border:1px solid rgba(148,163,184,.24);border-radius:12px;padding:8px 12px;min-width:114px;height:34px;font-weight:850;font-size:.80rem;line-height:1;cursor:pointer;touch-action:manipulation;box-shadow:0 8px 18px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.08)}
+    .audioBtn.playSound{background:linear-gradient(135deg,#15803d,#22c55e);color:#ecfdf5;border-color:rgba(74,222,128,.48)}
+    .audioBtn.stopSound{background:linear-gradient(135deg,#7f1d1d,#ef4444);color:#fef2f2;border-color:rgba(248,113,113,.48)}
+    .audioStatus{margin:7px 0 0 64px;color:#bbf7d0;font-size:.80rem;line-height:1.35}
     .volumeRow .paramIcon{background:linear-gradient(135deg,#22c55e,#86efac)}
-    @media(max-width:760px){.audioButtons{grid-template-columns:1fr 1fr}.audioBtn{padding:11px 10px;font-size:.90rem}}
+    @media(max-width:760px){.audioButtons{margin-left:60px;gap:8px}.audioBtn{min-width:104px;height:32px;padding:7px 10px;font-size:.76rem}.audioStatus{margin-left:60px;font-size:.76rem}}
     .speedButtonsStandalone{display:flex;gap:8px;align-items:center;justify-content:flex-start;margin:6px 0 0 64px;position:relative;z-index:2}
     .speedButtons button{border:1px solid rgba(148,163,184,.24);background:rgba(15,23,42,.76);color:#e5eef8;border-radius:10px;padding:5px 10px;font-size:.78rem;line-height:1.1;font-weight:800;cursor:pointer;touch-action:manipulation;min-width:58px;height:30px}
     .timeRow input[type=range]{touch-action:pan-x;min-width:0}
     @media(max-width:760px){
-      #visualizerCanvas{height:330px !important;max-height:330px !important}
+      #visualizerCanvas{height:min(48vh,360px) !important;min-height:300px !important;max-height:360px !important}
       .beatReadoutBar{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
       .beatReadoutBar>div{min-height:auto;padding:9px 10px}
       .beatReadoutBar>div:last-child{grid-column:1/-1}
@@ -63,7 +63,7 @@
     <div>
       <h2>Beats (บีตส์)</h2>
       <p class="sectionLead">บีตส์คือเสียงดัง–ค่อยสลับกันเป็นจังหวะ เมื่อคลื่นเสียงสองขบวนที่มีความถี่ใกล้กันซ้อนทับกัน</p>
-      <span class="versionBadge">v5.212 • verified + Δf≤10 Hz</span>
+      <span class="versionBadge">v5.216 • index link fixed + DPR verified</span>
     </div>
   </div>
   <div class="visualizerTemplateGrid longitudinalFocusGrid">
@@ -178,10 +178,14 @@ function updateLabels(){
 function canvasScale(canvas){
   const dpr=Math.max(1,window.devicePixelRatio||1);
   const rect=canvas.getBoundingClientRect();
-  const targetW=Math.max(600,Math.round(rect.width*dpr));
-  const targetH=Math.max(260,Math.round(rect.height*dpr));
+  const cssW=Math.max(300,Math.round(rect.width||600));
+  const cssH=Math.max(240,Math.round(rect.height||300));
+  const targetW=Math.round(cssW*dpr);
+  const targetH=Math.round(cssH*dpr);
   if(canvas.width!==targetW||canvas.height!==targetH){canvas.width=targetW;canvas.height=targetH;}
-  return {w:canvas.width,h:canvas.height,dpr};
+  const ctx=canvas.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return {w:cssW,h:cssH,dpr};
 }
 function background(ctx,w,h){
   const g=ctx.createLinearGradient(0,0,w,h);
@@ -205,8 +209,11 @@ function draw(){
   const {w,h}=canvasScale(canvas), ctx=canvas.getContext('2d'), p=params();
   updateLabels(); background(ctx,w,h);
   const left=94,right=w-54,plotW=right-left;
-  const lanes=[Math.round(h*0.18),Math.round(h*0.36),Math.round(h*0.62)];
-  const ampPx=Math.min(19*p.A,h*0.065);
+  const plotTop=Math.max(44,Math.round(h*0.12));
+  const plotBottom=Math.max(plotTop+180,h-30);
+  const bandH=(plotBottom-plotTop)/3;
+  const lanes=[plotTop+bandH*0.50,plotTop+bandH*1.50,plotTop+bandH*2.50];
+  const ampPx=Math.min(26*p.A,bandH*0.30);
   const viewSeconds=2.0;
   const beatPhase=2*Math.PI*state.time;
   const dfForView=Math.max(0.2,p.df);
@@ -242,18 +249,18 @@ function draw(){
   drawLine(ctx,envBot,'#f59e0b',2.0,.9,[8,6]);
 
   const probeX=left+plotW*.50, probeU=.50;
-  ctx.save();ctx.strokeStyle='rgba(248,250,252,.40)';ctx.setLineDash([7,7]);ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(probeX,28);ctx.lineTo(probeX,h-42);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='rgba(248,250,252,.90)';ctx.font='800 11px system-ui,sans-serif';ctx.textAlign='center';ctx.fillText('จุดสังเกต',probeX,22);ctx.restore();
+  ctx.save();ctx.strokeStyle='rgba(248,250,252,.40)';ctx.setLineDash([7,7]);ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(probeX,plotTop-18);ctx.lineTo(probeX,plotBottom+8);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='rgba(248,250,252,.90)';ctx.font='800 11px system-ui,sans-serif';ctx.textAlign='center';ctx.fillText('จุดสังเกต',probeX,plotTop-22);ctx.restore();
   drawDot(ctx,probeX,lanes[0]-wave1(probeU)*ampPx,5,'#38bdf8');
   drawDot(ctx,probeX,lanes[1]-wave2(probeU)*ampPx,5,'#ef4444');
   drawDot(ctx,probeX,lanes[2]-sum(probeU)*ampPx,6,'#22c55e');
 
   const loudness=Math.abs(envelope(probeU));
   ctx.save();
-  ctx.fillStyle='rgba(2,6,23,.56)';ctx.strokeStyle='rgba(148,163,184,.18)';rr(ctx,right-204,h-70,184,50,14,true,true);
-  ctx.fillStyle='rgba(226,232,240,.92)';ctx.font='800 13px system-ui,sans-serif';ctx.fillText('ความดังที่จุดสังเกต',right-190,h-50);
-  ctx.fillStyle='#f59e0b';ctx.fillRect(right-190,h-34,Math.max(2,135*loudness),8);
-  ctx.strokeStyle='rgba(245,158,11,.5)';ctx.strokeRect(right-190,h-34,135,8);
-  ctx.fillStyle='rgba(226,232,240,.9)';ctx.font='700 12px system-ui,sans-serif';ctx.fillText(`${fmt(loudness*100,0)}%`,right-48,h-27);
+  ctx.fillStyle='rgba(2,6,23,.56)';ctx.strokeStyle='rgba(148,163,184,.18)';rr(ctx,right-204,14,184,46,14,true,true);
+  ctx.fillStyle='rgba(226,232,240,.92)';ctx.font='800 13px system-ui,sans-serif';ctx.fillText('ความดังที่จุดสังเกต',right-190,31);
+  ctx.fillStyle='#f59e0b';ctx.fillRect(right-190,44,Math.max(2,135*loudness),8);
+  ctx.strokeStyle='rgba(245,158,11,.5)';ctx.strokeRect(right-190,44,135,8);
+  ctx.fillStyle='rgba(226,232,240,.9)';ctx.font='700 12px system-ui,sans-serif';ctx.fillText(`${fmt(loudness*100,0)}%`,right-48,52);
   ctx.restore();
 }
 function tick(now){

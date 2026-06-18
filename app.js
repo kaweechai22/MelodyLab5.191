@@ -1,5 +1,5 @@
 const $=id=>document.getElementById(id);
-/* v5.212 safe cleanup verified */
+/* v5.216 index beats link fixed */
 const rebuiltTopicModes = new Set(["soundReflection","soundRefraction","soundDiffraction","soundInterference","superposition","beatsViz","standingAir","resonanceViz","resonanceAirHarmonics","dopplerViz","shockWave","soundIntensity","soundIntensityLevel","soundLevelHearing","harmonicsViz","noisePollution","applicationsSound"]);
 const soundTopicModes = rebuiltTopicModes;
 
