@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MelodyLab v5.237 - Air Column Resonance: Response Curve (การสั่นพ้องของอากาศในท่อ: กราฟตอบสนอง)</title>
+  <title>MelodyLab v5.239 - Air Column Resonance: Response Curve (การสั่นพ้องของอากาศในท่อ: กราฟตอบสนอง)</title>
   <meta name="description" content="MelodyLab ห้องทดลองเสียงและเก็บข้อมูล ด้วยมือถือ">
   <meta name="theme-color" content="#0f172a">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" href="icon-192.png">
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="stylesheet" href="style.css">
-  <meta name="melodylab-build-version" content="v5.237-air-column-resonance-speaker">
+  <meta name="melodylab-build-version" content="v5.239-air-column-resonance-audio-no-q">
   <style>
     .resonancePage .versionBadge{display:inline-flex;margin-top:10px;padding:8px 14px;border-radius:999px;background:rgba(16,185,129,.14);border:1px solid rgba(52,211,153,.35);color:#bbf7d0;font-weight:900}
     .resCanvas{display:block;width:100% !important;height:min(66vh,560px) !important;min-height:450px !important;max-height:560px !important;aspect-ratio:auto !important}
@@ -49,6 +49,7 @@
     .jumpBtns button{min-height:38px}
     .modeTableBox{margin-top:12px;border-radius:18px;border:1px solid rgba(148,163,184,.14);background:rgba(15,23,42,.54);overflow:hidden}
     .modeTableBox h4{margin:0;padding:10px 12px;color:#e2e8f0;font-size:.92rem}
+    .modeTableNote{margin:-4px 12px 8px;color:#94a3b8;font-size:.74rem;font-weight:800;line-height:1.35}
     .modeTable{width:100%;border-collapse:collapse;font-size:.78rem}
     .modeTable th,.modeTable td{padding:7px 9px;border-top:1px solid rgba(148,163,184,.12);text-align:left}
     .modeTable th{color:#93c5fd;font-weight:900}
@@ -63,6 +64,11 @@
     .resLegend .driveLine{background:#22d3ee;box-shadow:0 0 10px rgba(34,211,238,.45)}
     .resLegend .tubeLine{background:#38bdf8;box-shadow:0 0 10px rgba(56,189,248,.45)}
     .resLegend .peakDot{width:12px;height:12px;border-radius:999px;background:#22c55e;display:inline-block}
+
+    .resAudioBar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 12px 2px;padding:9px 10px;border-radius:16px;background:rgba(15,23,42,.62);border:1px solid rgba(148,163,184,.16)}
+    .resAudioBar button{min-height:36px}
+    .resSoundLabel{color:#cbd5e1;font-size:.82rem;font-weight:900}
+    .soundWarn{color:#fef08a}
     @media(max-width:760px){
       .resCanvas{height:min(64vh,530px) !important;min-height:430px !important;max-height:530px !important}
       .resReadout{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
@@ -85,7 +91,7 @@
     <div>
       <h2>12. Air Column Resonance: Response Curve (การสั่นพ้องของอากาศในท่อ: กราฟตอบสนอง)</h2>
       <p class="sectionLead">ปรับความถี่กระตุ้นแล้วดูยอดพ้องและการตอบสนองของอากาศในท่อ</p>
-      <span class="versionBadge">v5.237 • ลำโพงความถี่กระตุ้น</span>
+      <span class="versionBadge">v5.239 • เสียงจริง + ไม่มี Q</span>
     </div>
   </div>
 
@@ -100,6 +106,11 @@
             <button id="resPauseBtn" class="playerBtn playerPause" title="หยุด" aria-label="หยุด"><span class="playerGlyph" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="7" y="6" width="3.5" height="12" rx="1.2"/><rect x="13.5" y="6" width="3.5" height="12" rx="1.2"/></svg></span></button>
             <button id="resResetBtn" class="playerBtn playerReset" title="รีเซ็ต" aria-label="รีเซ็ต"><span class="playerGlyph" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 12a7 7 0 1 1-2.05-4.95"/><path d="M19 5v5h-5"/></svg></span></button>
           </div>
+        </div>
+        <div class="resAudioBar" aria-label="ควบคุมเสียงความถี่กระตุ้น">
+          <button id="resSoundBtn" class="secondary" type="button">🔊 เปิดเสียง</button>
+          <button id="resSweepBtn" class="secondary" type="button">Sweep หาจุดพ้อง</button>
+          <span id="resSoundLabel" class="resSoundLabel">เสียงปิดอยู่</span>
         </div>
       </div>
 
@@ -125,7 +136,7 @@
                 <li>ท่อเปิด–เปิด: เกิดได้ทุกฮาร์มอนิก</li>
                 <li>ท่อปิด–เปิด: เกิดเด่นที่ฮาร์มอนิกคี่</li>
                 <li>ยิ่ง f ใกล้ fₙ การตอบสนองของอากาศในท่อยิ่งสูง</li>
-                <li>ค่า Q สูงทำให้ยอดพ้องแคบและเด่นขึ้น</li>
+                <li>แอปบอกช่วงเกิด/ใกล้/ไม่เกิดการสั่นพ้องโดยประมาณให้ทันที</li>
               </ul>
             </div>
             <div class="templateLegendCard resLegend">
@@ -181,23 +192,15 @@
         </select>
         <div class="paramValueWrap"><span id="tubeLabel" class="valueBadge">ปิด–เปิด</span></div>
       </div>
-
-      <div class="field richField neonParamRow">
-        <div class="paramIcon qIcon">Q</div>
-        <div class="paramText"><label>ความคมของสั่นพ้อง</label><small>Resonance sharpness</small></div>
-        <input id="resQ" type="range" min="6" max="70" step="1" value="24">
-        <div class="paramValueWrap"><span id="qLabel" class="valueBadge">24</span></div>
-      </div>
-
-      <div class="field richField neonParamRow">
+<div class="field richField neonParamRow">
         <div class="paramIcon timeIcon">◷</div>
         <div class="paramText"><label>ความเร็วแอนิเมชัน</label><small>Animation speed</small></div>
         <input id="resTimeSpeed" type="range" min="0.10" max="2.00" step="0.10" value="0.80">
         <div class="paramValueWrap"><span id="timeLabel" class="valueBadge">0.8×</span></div>
       </div>
       <div class="modeTableBox">
-        <h4>ความถี่ธรรมชาติของท่อ</h4>
-        <table class="modeTable"><thead><tr><th>โหมด</th><th>fₙ</th><th>สถานะ</th></tr></thead><tbody id="resModeRows"></tbody></table>
+        <h4>ความถี่ธรรมชาติของท่อ</h4><p class="modeTableNote">ทุกแถวคือความถี่ที่ทำให้ท่อเกิดการสั่นพ้อง เมื่อปรับ f ไปที่ค่านั้น</p>
+        <table class="modeTable"><thead><tr><th>โหมด</th><th>fₙ</th><th>สถานะของความถี่นี้</th></tr></thead><tbody id="resModeRows"></tbody></table>
       </div>
     </div>
   </div>
@@ -220,7 +223,8 @@
 'use strict';
 const $ = id => document.getElementById(id);
 const state = {running:true,last:performance.now(),time:0.10,logs:[]};
-const F_MIN=50, F_MAX=1500, STEP=5;
+const audio = {ctx:null,osc:null,gain:null,playing:false,sweeping:false,sweepStart:0,sweepDuration:9000};
+const F_MIN=50, F_MAX=1500, STEP=5, RESPONSE_WIDTH=0.05;
 
 function fmt(v,d=2){const s=Number(v).toFixed(d);return d===0?s:s.replace(/\.?0+$/,'');}
 function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
@@ -236,8 +240,8 @@ function buildModes(tube,L,v,count=8){
   }
   return modes;
 }
-function ampFor(f,fn,Q){
-  const bw=Math.max(8,fn/Q);
+function ampFor(f,fn){
+  const bw=Math.max(8,fn*RESPONSE_WIDTH);
   const x=(f-fn)/bw;
   return 1/(1+x*x);
 }
@@ -252,7 +256,7 @@ function nearestMode(f,modes){
   modes.forEach(m=>{
     const detune=Math.abs(f-m.freq);
     const detunePct=detune/m.freq*100;
-    const amp=ampFor(f,m.freq,Number($('resQ')?.value||24));
+    const amp=ampFor(f,m.freq);
     const item={mode:m,detune,detunePct,amp,status:bandStatus(detunePct)};
     if(!best || detunePct<best.detunePct) best=item;
   });
@@ -263,16 +267,15 @@ function params(){
   const L=Number($('resLength')?.value || 0.80);
   const v=Number($('resSpeed')?.value || 343);
   const tube=$('resTube')?.value || 'closed';
-  const Q=Number($('resQ')?.value || 24);
   const timeSpeed=Number($('resTimeSpeed')?.value || 0.80);
   const modes=buildModes(tube,L,v,8);
   const best=nearestMode(f,modes);
-  return {f,L,v,tube,Q,timeSpeed,modes,best,amp:best.amp,status:best.status};
+  return {f,L,v,tube,timeSpeed,modes,best,amp:best.amp,status:best.status};
 }
 function setFreq(value){
   const f=clamp(Math.round(value/STEP)*STEP,F_MIN,F_MAX);
   const el=$('resFreq'); if(el){el.value=String(f);}
-  draw();
+  draw(); updateAudio();
 }
 function canvasScale(canvas){
   const dpr=Math.max(1,window.devicePixelRatio||1);
@@ -310,7 +313,6 @@ function updateLabels(){
   $('lengthLabel').textContent=`${fmt(p.L,2)} m`;
   $('speedLabel').textContent=`${fmt(p.v,0)} m/s`;
   $('tubeLabel').textContent=p.tube==='closed'?'ปิด–เปิด':'เปิด–เปิด';
-  $('qLabel').textContent=fmt(p.Q,0);
   $('timeLabel').textContent=`${fmt(p.timeSpeed,1)}×`;
   $('readDrive').textContent=`${fmt(p.f,0)} Hz`;
   $('readNearest').textContent=`${fmt(b.mode.freq,1)} Hz`;
@@ -320,9 +322,10 @@ function updateLabels(){
   const panel=$('resStatusPanel');
   panel.className=`resStatusPanel ${b.status.key}`;
   $('statusTitle').textContent=b.status.text;
-  $('statusSub').textContent=`ใกล้ ${b.mode.label} ที่ fₙ = ${fmt(b.mode.freq,1)} Hz • คลาดเคลื่อน ${fmt(b.detunePct,1)}% • การตอบสนอง ${fmt(b.amp*100,0)}%`;
+  $('statusSub').textContent=`ใกล้ ${b.mode.label} ที่ fₙ = ${fmt(b.mode.freq,1)} Hz • คลาดเคลื่อน ${fmt(b.detunePct,1)}% • เสียงจำลอง ${fmt((0.18+0.82*b.amp)*100,0)}%`;
   renderFreqBand(p);
   renderModeTable(p);
+  updateAudioLabel();
 }
 function renderFreqBand(p){
   const band=$('resFreqBand'); if(!band)return;
@@ -333,20 +336,16 @@ function renderFreqBand(p){
     const left=Math.max(0,Math.min(a,b)), width=Math.min(100,Math.max(a,b))-left;
     if(width>0) html += `<span class="zone ${key}" style="left:${left}%;width:${width}%"></span>`;
   };
-  p.modes.forEach(m=>{
-    addZone(m,0.10,'approach');
-    addZone(m,0.05,'near');
-    addZone(m,0.02,'resonance');
-  });
+  p.modes.forEach(m=>{addZone(m,0.10,'approach');addZone(m,0.05,'near');addZone(m,0.02,'resonance');});
   html += `<span class="marker" style="left:${pct(p.f)}%"></span>`;
   band.innerHTML=html;
 }
 function renderModeTable(p){
   const body=$('resModeRows'); if(!body)return;
   const rows=p.modes.slice(0,6).map(m=>{
-    const detunePct=Math.abs(p.f-m.freq)/m.freq*100;
-    const st=bandStatus(detunePct);
-    return `<tr><td>${m.label}</td><td>${fmt(m.freq,1)} Hz</td><td><span class="modeBadge ${st.key}">${st.short}</span></td></tr>`;
+    const isNearest=m.n===p.best.mode.n && m.harmonic===p.best.mode.harmonic;
+    const mark=isNearest?' • ใกล้ f ปัจจุบัน':'';
+    return `<tr><td>${m.label}</td><td>${fmt(m.freq,1)} Hz</td><td><span class="modeBadge resonance">เกิด${mark}</span></td></tr>`;
   });
   body.innerHTML=rows.join('');
 }
@@ -355,73 +354,31 @@ function drawSpeaker(ctx,x,y,dir,p,timePhase){
   ctx.save();
   const color=p.status.color || '#22d3ee';
   const bodyW=24, bodyH=34, horn=20;
-  ctx.fillStyle='rgba(15,23,42,.86)';
-  ctx.strokeStyle='rgba(148,163,184,.36)';
-  ctx.lineWidth=1.6;
+  ctx.fillStyle='rgba(15,23,42,.86)';ctx.strokeStyle='rgba(148,163,184,.36)';ctx.lineWidth=1.6;
   rr(ctx,x-bodyW/2,y-bodyH/2,bodyW,bodyH,8,true,true);
-
   ctx.beginPath();
-  if(dir>0){
-    ctx.moveTo(x+bodyW/2-2,y-14);ctx.lineTo(x+bodyW/2+horn,y-24);ctx.lineTo(x+bodyW/2+horn,y+24);ctx.lineTo(x+bodyW/2-2,y+14);
-  }else{
-    ctx.moveTo(x-bodyW/2+2,y-14);ctx.lineTo(x-bodyW/2-horn,y-24);ctx.lineTo(x-bodyW/2-horn,y+24);ctx.lineTo(x-bodyW/2+2,y+14);
-  }
-  ctx.closePath();
-  ctx.fillStyle='rgba(34,211,238,.22)';
-  ctx.strokeStyle='rgba(34,211,238,.75)';
-  ctx.fill();ctx.stroke();
-
-  const pulse=0.5+0.5*Math.sin(timePhase*2.0);
-  const cx=x+dir*(bodyW/2+horn+2);
-  const start=dir>0?-0.78:Math.PI-0.78;
-  const end=dir>0?0.78:Math.PI+0.78;
-  for(let i=0;i<3;i++){
-    const r=14+i*12+pulse*7;
-    ctx.globalAlpha=0.30+0.18*(2-i)/2;
-    ctx.strokeStyle=color;
-    ctx.lineWidth=2.3;
-    ctx.beginPath();
-    ctx.arc(cx,y,r,start,end);
-    ctx.stroke();
-  }
-  ctx.globalAlpha=1;
-  ctx.fillStyle='rgba(15,23,42,.78)';
-  ctx.strokeStyle='rgba(148,163,184,.20)';
-  rr(ctx,x-54,y-58,108,30,11,true,true);
-  ctx.fillStyle='rgba(226,232,240,.96)';
-  ctx.font='900 10px system-ui,sans-serif';
-  ctx.textAlign='center';
-  ctx.fillText(`ลำโพง f = ${fmt(p.f,0)} Hz`,x,y-39);
+  if(dir>0){ctx.moveTo(x+bodyW/2-2,y-14);ctx.lineTo(x+bodyW/2+horn,y-24);ctx.lineTo(x+bodyW/2+horn,y+24);ctx.lineTo(x+bodyW/2-2,y+14);}
+  else{ctx.moveTo(x-bodyW/2+2,y-14);ctx.lineTo(x-bodyW/2-horn,y-24);ctx.lineTo(x-bodyW/2-horn,y+24);ctx.lineTo(x-bodyW/2+2,y+14);}
+  ctx.closePath();ctx.fillStyle='rgba(34,211,238,.22)';ctx.strokeStyle='rgba(34,211,238,.75)';ctx.fill();ctx.stroke();
+  const pulse=0.5+0.5*Math.sin(timePhase*2.0), cx=x+dir*(bodyW/2+horn+2);
+  const start=dir>0?-0.78:Math.PI-0.78, end=dir>0?0.78:Math.PI+0.78;
+  for(let i=0;i<3;i++){const r=14+i*12+pulse*7;ctx.globalAlpha=0.30+0.18*(2-i)/2;ctx.strokeStyle=color;ctx.lineWidth=2.3;ctx.beginPath();ctx.arc(cx,y,r,start,end);ctx.stroke();}
+  ctx.globalAlpha=1;ctx.fillStyle='rgba(15,23,42,.78)';ctx.strokeStyle='rgba(148,163,184,.20)';rr(ctx,x-54,y-58,108,30,11,true,true);
+  ctx.fillStyle='rgba(226,232,240,.96)';ctx.font='900 10px system-ui,sans-serif';ctx.textAlign='center';ctx.fillText(`ลำโพง f = ${fmt(p.f,0)} Hz`,x,y-39);
   ctx.restore();
 }
-
 function drawTube(ctx,left,right,y,amp,p,mode,timePhase){
   const W=right-left, tubeTop=y-amp-30, tubeH=2*amp+60;
   ctx.save();
   const grad=ctx.createLinearGradient(left,tubeTop,right,tubeTop+tubeH);
-  grad.addColorStop(0,'rgba(14,165,233,.10)');
-  grad.addColorStop(.5,'rgba(148,163,184,.12)');
-  grad.addColorStop(1,'rgba(14,165,233,.08)');
-  ctx.fillStyle=grad;ctx.strokeStyle='rgba(125,211,252,.34)';ctx.lineWidth=2;
-  rr(ctx,left,tubeTop,W,tubeH,Math.min(24,tubeH/2),true,true);
+  grad.addColorStop(0,'rgba(14,165,233,.10)');grad.addColorStop(.5,'rgba(148,163,184,.12)');grad.addColorStop(1,'rgba(14,165,233,.08)');
+  ctx.fillStyle=grad;ctx.strokeStyle='rgba(125,211,252,.34)';ctx.lineWidth=2;rr(ctx,left,tubeTop,W,tubeH,Math.min(24,tubeH/2),true,true);
   const openEnd=x=>{ctx.strokeStyle='rgba(34,211,238,.82)';ctx.lineWidth=4;ctx.beginPath();ctx.ellipse(x,y,tubeH*.18,tubeH*.43,0,0,Math.PI*2);ctx.stroke();ctx.fillStyle='rgba(186,230,253,.70)';ctx.font='800 9px system-ui,sans-serif';ctx.textAlign='center';ctx.fillText('ปลายเปิด',x,y+tubeH*.54);};
   const closedEnd=x=>{ctx.strokeStyle='rgba(248,113,113,.86)';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(x,y-tubeH*.42);ctx.lineTo(x,y+tubeH*.42);ctx.stroke();ctx.lineWidth=1.2;for(let yy=y-tubeH*.40;yy<y+tubeH*.40;yy+=9){ctx.beginPath();ctx.moveTo(x-12,yy+10);ctx.lineTo(x,yy);ctx.stroke();}ctx.fillStyle='rgba(254,202,202,.70)';ctx.font='800 9px system-ui,sans-serif';ctx.textAlign='center';ctx.fillText('ปลายปิด',x,y+tubeH*.54);};
   if(p.tube==='closed'){closedEnd(left);openEnd(right);drawSpeaker(ctx,right+48,y,-1,p,timePhase);}else{drawSpeaker(ctx,left-48,y,1,p,timePhase);openEnd(left);openEnd(right);}
-  for(let i=0;i<=W;i+=4){
-    const u=i/W, pr=pressureShape(p,u,mode)*Math.sin(timePhase)*p.amp;
-    const a=Math.min(.45,Math.abs(pr)*.34);
-    if(a>.01){ctx.fillStyle=pr>=0?`rgba(248,113,113,${a})`:`rgba(96,165,250,${a})`;ctx.fillRect(left+i,tubeTop+4,4,tubeH-8);}
-  }
+  for(let i=0;i<=W;i+=4){const u=i/W, pr=pressureShape(p,u,mode)*Math.sin(timePhase)*p.amp;const a=Math.min(.45,Math.abs(pr)*.34);if(a>.01){ctx.fillStyle=pr>=0?`rgba(248,113,113,${a})`:`rgba(96,165,250,${a})`;ctx.fillRect(left+i,tubeTop+4,4,tubeH-8);}}
   const rows=4, count=28;
-  for(let r=0;r<rows;r++){
-    for(let i=0;i<count;i++){
-      const u=(i+.5)/count, pr=pressureShape(p,u,mode)*Math.sin(timePhase)*p.amp, d=displacementShape(p,u,mode)*Math.cos(timePhase)*p.amp;
-      const x=left+(clamp(u+0.018*d,0.02,0.98))*W + ((((i+1)*17+(r+1)*23)%100)/100-.5)*2;
-      const yy=y+(r-(rows-1)/2)*10 + ((((i+1)*29+(r+1)*13)%100)/100-.5)*3;
-      const rad=1.8+0.4*Math.abs(pr), tint=pr>=0?'250,204,21':'191,219,254';
-      ctx.fillStyle=`rgba(${tint},${0.48+0.20*Math.abs(pr)})`;ctx.beginPath();ctx.arc(x,yy,rad,0,Math.PI*2);ctx.fill();
-    }
-  }
+  for(let r=0;r<rows;r++){for(let i=0;i<count;i++){const u=(i+.5)/count, pr=pressureShape(p,u,mode)*Math.sin(timePhase)*p.amp, d=displacementShape(p,u,mode)*Math.cos(timePhase)*p.amp;const x=left+(clamp(u+0.018*d,0.02,0.98))*W + ((((i+1)*17+(r+1)*23)%100)/100-.5)*2;const yy=y+(r-(rows-1)/2)*10 + ((((i+1)*29+(r+1)*13)%100)/100-.5)*3;const rad=1.8+0.4*Math.abs(pr), tint=pr>=0?'250,204,21':'191,219,254';ctx.fillStyle=`rgba(${tint},${0.48+0.20*Math.abs(pr)})`;ctx.beginPath();ctx.arc(x,yy,rad,0,Math.PI*2);ctx.fill();}}
   const pts=[];for(let i=0;i<=W;i+=2){const u=i/W;pts.push([left+i,y-pressureShape(p,u,mode)*Math.sin(timePhase)*amp*p.amp]);}
   line(ctx,pts,'#f59e0b',3,.96);
   ctx.fillStyle='rgba(15,23,42,.78)';ctx.strokeStyle='rgba(148,163,184,.16)';rr(ctx,18,18,Math.min(330,ctx.canvas.width-36),52,14,true,true);
@@ -430,26 +387,18 @@ function drawTube(ctx,left,right,y,amp,p,mode,timePhase){
   ctx.restore();
 }
 function drawResponse(ctx,x,y,w,h,p){
-  ctx.save();
-  ctx.fillStyle='rgba(15,23,42,.56)';ctx.strokeStyle='rgba(148,163,184,.18)';rr(ctx,x,y,w,h,16,true,true);
+  ctx.save();ctx.fillStyle='rgba(15,23,42,.56)';ctx.strokeStyle='rgba(148,163,184,.18)';rr(ctx,x,y,w,h,16,true,true);
   const sx=f=>x+(f-F_MIN)/(F_MAX-F_MIN)*w, sy=a=>y+h-20-a*(h-44);
-  // colored resonance bands
-  const band=(fn,range,color,alpha)=>{
-    const x1=sx(fn*(1-range)), x2=sx(fn*(1+range));
-    const l=clamp(Math.min(x1,x2),x,x+w), r=clamp(Math.max(x1,x2),x,x+w);
-    if(r>l){ctx.fillStyle=color.replace('ALPHA',alpha);ctx.fillRect(l,y+34,r-l,h-54);}
-  };
+  const band=(fn,range,color,alpha)=>{const x1=sx(fn*(1-range)),x2=sx(fn*(1+range));const l=clamp(Math.min(x1,x2),x,x+w),r=clamp(Math.max(x1,x2),x,x+w);if(r>l){ctx.fillStyle=color.replace('ALPHA',alpha);ctx.fillRect(l,y+34,r-l,h-54);}};
   p.modes.forEach(m=>{band(m.freq,.10,'rgba(251,146,60,ALPHA)',.10);band(m.freq,.05,'rgba(250,204,21,ALPHA)',.15);band(m.freq,.02,'rgba(34,197,94,ALPHA)',.22);});
   ctx.strokeStyle='rgba(148,163,184,.28)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x+8,y+h-20);ctx.lineTo(x+w-8,y+h-20);ctx.stroke();
   ctx.fillStyle='rgba(203,213,225,.90)';ctx.font='900 11px system-ui,sans-serif';ctx.fillText('กราฟการตอบสนอง + ช่วงความถี่สั่นพ้อง',x+14,y+22);
-  const pts=[];for(let f=F_MIN;f<=F_MAX;f+=5){let a=0;p.modes.forEach(m=>{a=Math.max(a,ampFor(f,m.freq,p.Q));});pts.push([sx(f),sy(a)]);}
+  const pts=[];for(let f=F_MIN;f<=F_MAX;f+=5){let a=0;p.modes.forEach(m=>{a=Math.max(a,ampFor(f,m.freq));});pts.push([sx(f),sy(a)]);}
   line(ctx,pts,'#f59e0b',2.8,.95);
   p.modes.forEach(m=>{if(m.freq<F_MIN||m.freq>F_MAX)return;const px=sx(m.freq),py=sy(1);ctx.strokeStyle='rgba(34,197,94,.34)';ctx.setLineDash([4,5]);ctx.beginPath();ctx.moveTo(px,y+34);ctx.lineTo(px,y+h-18);ctx.stroke();ctx.setLineDash([]);dot(ctx,px,py,4.5,'#22c55e',`f${m.n}`,true);});
-  const dx=sx(clamp(p.f,F_MIN,F_MAX));
-  ctx.strokeStyle='rgba(34,211,238,.95)';ctx.lineWidth=2.2;ctx.setLineDash([8,6]);ctx.beginPath();ctx.moveTo(dx,y+30);ctx.lineTo(dx,y+h-18);ctx.stroke();ctx.setLineDash([]);
+  const dx=sx(clamp(p.f,F_MIN,F_MAX));ctx.strokeStyle='rgba(34,211,238,.95)';ctx.lineWidth=2.2;ctx.setLineDash([8,6]);ctx.beginPath();ctx.moveTo(dx,y+30);ctx.lineTo(dx,y+h-18);ctx.stroke();ctx.setLineDash([]);
   dot(ctx,dx,sy(p.amp),5,p.status.color,'f',false);
-  ctx.fillStyle='rgba(148,163,184,.94)';ctx.font='800 10px system-ui,sans-serif';ctx.textAlign='left';ctx.fillText(`${F_MIN} Hz`,x+10,y+h-6);ctx.textAlign='right';ctx.fillText(`${F_MAX} Hz`,x+w-10,y+h-6);
-  ctx.restore();
+  ctx.fillStyle='rgba(148,163,184,.94)';ctx.font='800 10px system-ui,sans-serif';ctx.textAlign='left';ctx.fillText(`${F_MIN} Hz`,x+10,y+h-6);ctx.textAlign='right';ctx.fillText(`${F_MAX} Hz`,x+w-10,y+h-6);ctx.restore();
 }
 function draw(){
   const canvas=$('resCanvas');if(!canvas)return;
@@ -463,48 +412,94 @@ function draw(){
 }
 function row(){
   const p=params(), b=p.best;
-  return {timestamp:new Date().toISOString(),topic:'Air Column Resonance',tube:p.tube==='closed'?'closed-open':'open-open',drive_frequency_Hz:Number(fmt(p.f,1)),tube_length_m:Number(fmt(p.L,2)),sound_speed_mps:Number(fmt(p.v,0)),Q:p.Q,nearest_mode:b.mode.label,nearest_frequency_Hz:Number(fmt(b.mode.freq,2)),detune_Hz:Number(fmt(b.detune,2)),detune_percent:Number(fmt(b.detunePct,2)),response_percent:Number(fmt(b.amp*100,1)),status:b.status.text};
+  return {timestamp:new Date().toISOString(),topic:'Air Column Resonance',tube:p.tube==='closed'?'closed-open':'open-open',drive_frequency_Hz:Number(fmt(p.f,1)),tube_length_m:Number(fmt(p.L,2)),sound_speed_mps:Number(fmt(p.v,0)),nearest_mode:b.mode.label,nearest_frequency_Hz:Number(fmt(b.mode.freq,2)),detune_Hz:Number(fmt(b.detune,2)),detune_percent:Number(fmt(b.detunePct,2)),response_percent:Number(fmt(b.amp*100,1)),status:b.status.text};
 }
 function renderTable(){
   const head=$('resHead'),body=$('resBody');if(!head||!body)return;
-  const keys=['timestamp','tube','drive_frequency_Hz','tube_length_m','sound_speed_mps','Q','nearest_mode','nearest_frequency_Hz','detune_percent','status'];
+  const keys=['timestamp','tube','drive_frequency_Hz','tube_length_m','sound_speed_mps','nearest_mode','nearest_frequency_Hz','detune_percent','status'];
   head.innerHTML=keys.map(k=>`<th>${k}</th>`).join('');
   body.innerHTML=state.logs.map(r=>`<tr>${keys.map(k=>`<td>${r[k]??''}</td>`).join('')}</tr>`).join('');
 }
 function downloadCSV(){
   if(!state.logs.length) state.logs.push(row());
   const keys=Object.keys(state.logs[0]);
-  const csv=[keys.join(','),...state.logs.map(r=>keys.map(k=>JSON.stringify(r[k]??'')).join(','))].join('\\n');
+  const csv=[keys.join(','),...state.logs.map(r=>keys.map(k=>JSON.stringify(r[k]??'')).join(','))].join('\n');
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='melodylab_air_column_resonance.csv';a.click();URL.revokeObjectURL(a.href);renderTable();
 }
 function savePNG(){const canvas=$('resCanvas');if(!canvas)return;const a=document.createElement('a');a.href=canvas.toDataURL('image/png');a.download='melodylab_air_column_resonance.png';a.click();}
-function jump(delta){
+function jump(delta){const p=params();const sorted=p.modes.map(m=>m.freq).filter(f=>f>=F_MIN&&f<=F_MAX).sort((a,b)=>a-b);if(!sorted.length)return;let target=p.best.mode.freq;if(delta<0){target=[...sorted].reverse().find(f=>f<p.f-STEP)||sorted[0];}if(delta>0){target=sorted.find(f=>f>p.f+STEP)||sorted[sorted.length-1];}setFreq(target);}
+function audioSupported(){return !!(window.AudioContext||window.webkitAudioContext);}
+function setSoundText(text,warn=false){const el=$('resSoundLabel');if(el){el.textContent=text;el.className=warn?'resSoundLabel soundWarn':'resSoundLabel';}}
+async function ensureAudio(){
+  if(!audioSupported()){setSoundText('อุปกรณ์นี้ไม่รองรับ Web Audio',true);return false;}
+  if(!audio.ctx){
+    const AC=window.AudioContext||window.webkitAudioContext;
+    audio.ctx=new AC();
+    audio.osc=audio.ctx.createOscillator();
+    audio.gain=audio.ctx.createGain();
+    audio.osc.type='sine';
+    audio.gain.gain.value=0;
+    audio.osc.connect(audio.gain);audio.gain.connect(audio.ctx.destination);audio.osc.start();
+  }
+  if(audio.ctx.state==='suspended' && audio.ctx.resume) await audio.ctx.resume();
+  return true;
+}
+function updateAudio(){
+  if(!audio.playing||!audio.ctx||!audio.osc||!audio.gain)return;
+  const p=params(), t=audio.ctx.currentTime||0;
+  const gain=0.006+0.060*p.amp;
+  audio.osc.frequency.setTargetAtTime(p.f,t,0.015);
+  audio.gain.gain.setTargetAtTime(gain,t,0.03);
+  updateAudioLabel();
+}
+function updateAudioLabel(){
   const p=params();
-  const sorted=p.modes.map(m=>m.freq).filter(f=>f>=F_MIN&&f<=F_MAX).sort((a,b)=>a-b);
-  if(!sorted.length)return;
-  let target=p.best.mode.freq;
-  if(delta<0){target=[...sorted].reverse().find(f=>f<p.f-STEP)||sorted[0];}
-  if(delta>0){target=sorted.find(f=>f>p.f+STEP)||sorted[sorted.length-1];}
-  setFreq(target);
+  const btn=$('resSoundBtn');
+  if(btn) btn.textContent=audio.playing?'🔇 ปิดเสียง':'🔊 เปิดเสียง';
+  if(audio.sweeping){setSoundText(`Sweep: ${fmt(p.f,0)} Hz`);return;}
+  setSoundText(audio.playing?`กำลังเล่น ${fmt(p.f,0)} Hz • ความดังตามการสั่นพ้อง`:'เสียงปิดอยู่');
+}
+async function toggleSound(){
+  if(audio.playing){
+    audio.playing=false;audio.sweeping=false;
+    if(audio.gain&&audio.ctx) audio.gain.gain.setTargetAtTime(0,audio.ctx.currentTime||0,0.03);
+    updateAudioLabel();return;
+  }
+  if(await ensureAudio()){audio.playing=true;updateAudio();}
+}
+async function startSweep(){
+  if(!(await ensureAudio())) return;
+  audio.playing=true;audio.sweeping=true;audio.sweepStart=performance.now();updateAudioLabel();
+}
+function updateSweep(now){
+  if(!audio.sweeping)return;
+  const r=clamp((now-audio.sweepStart)/audio.sweepDuration,0,1);
+  const f=F_MIN+(F_MAX-F_MIN)*r;
+  const el=$('resFreq'); if(el) el.value=String(Math.round(f/STEP)*STEP);
+  if(r>=1){audio.sweeping=false;setSoundText('Sweep จบแล้ว');}
 }
 function tick(now){
   const dt=Math.min(.05,(now-state.last)/1000);state.last=now;
+  updateSweep(now);
   const p=params(), fFactor=clamp(p.f/430,0.35,2.50);
   if(state.running) state.time += dt*p.timeSpeed*0.22*fFactor;
-  draw();requestAnimationFrame(tick);
+  draw();updateAudio();requestAnimationFrame(tick);
 }
-['resFreq','resLength','resSpeed','resTube','resQ','resTimeSpeed'].forEach(id=>{$(id)?.addEventListener('input',draw);$(id)?.addEventListener('change',draw);});
+['resFreq','resLength','resSpeed','resTube','resTimeSpeed'].forEach(id=>{$(id)?.addEventListener('input',()=>{draw();updateAudio();});$(id)?.addEventListener('change',()=>{draw();updateAudio();});});
 $('resPrevModeBtn')?.addEventListener('click',()=>jump(-1));
 $('resSnapBtn')?.addEventListener('click',()=>setFreq(params().best.mode.freq));
 $('resNextModeBtn')?.addEventListener('click',()=>jump(1));
+$('resSoundBtn')?.addEventListener('click',toggleSound);
+$('resSweepBtn')?.addEventListener('click',startSweep);
 $('resPlayBtn')?.addEventListener('click',()=>{state.running=true;});
 $('resPauseBtn')?.addEventListener('click',()=>{state.running=false;});
-$('resResetBtn')?.addEventListener('click',()=>{state.time=0.10;draw();});
+$('resResetBtn')?.addEventListener('click',()=>{state.time=0.10;draw();updateAudio();});
 $('resCaptureBtn')?.addEventListener('click',()=>{state.logs.push(row());renderTable();});
 $('resDownloadBtn')?.addEventListener('click',downloadCSV);
 $('resPngBtn')?.addEventListener('click',savePNG);
 $('resClearBtn')?.addEventListener('click',()=>{state.logs=[];renderTable();});
 window.addEventListener('resize',draw,{passive:true});
+window.addEventListener('pagehide',()=>{audio.playing=false;if(audio.gain&&audio.ctx)audio.gain.gain.setTargetAtTime(0,audio.ctx.currentTime||0,0.02);});
 draw();requestAnimationFrame(tick);
 })();
 </script>
